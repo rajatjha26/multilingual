@@ -21,6 +21,7 @@ def PrintLog(message="Here....."):
     # print ("LOG: %s:, %s:, %s:, %s" %(info.filename, info.function, info.lineno, message))
 
 def autoTrans(srcData,outputDS,source,target,translEngine,fileName):
+    nameinFile=re.sub(r"[.](txt)","",fileName)
     data=[]
     segData=""
     mainData=""
@@ -47,6 +48,8 @@ def autoTrans(srcData,outputDS,source,target,translEngine,fileName):
                 segData=segData+"\n"+line
     data.append(mainData)
     data.append(segData)
+    out.write(nameinFile)
+    out.write("\n")
     output=[]
     driver = webdriver.Firefox()
     if(translEngine=="gmt"):
@@ -70,38 +73,24 @@ def autoTrans(srcData,outputDS,source,target,translEngine,fileName):
         selectTar.click()
         time.sleep(1)
         if(target=="eng"):
-            out.write("English")
-            out.write("\n")
             driver.find_element(By.CSS_SELECTOR, ".language_list_item_wrapper-en:nth-child(23) > .language_list_item").click()
             time.sleep(1)
         elif(target=="hin"):
-            out.write("Hindi")
-            out.write("\n")
             driver.find_element(By.CSS_SELECTOR, ".language_list_item_wrapper-hi:nth-child(39) > .language_list_item").click()
             time.sleep(1)
         elif(target=="ban"):
-            out.write("Bangla")
-            out.write("\n")
             driver.find_element(By.CSS_SELECTOR, ".language_list_section:nth-child(2) > .language_list_item_wrapper-bn > .language_list_item").click()
             time.sleep(1)
         elif(target=="tel"):
-            out.write("Telugu")
-            out.write("\n")
             driver.find_element(By.CSS_SELECTOR, ".language_list_item_wrapper-te:nth-child(97) > .language_list_item").click()
             time.sleep(1)
         elif(target=="tam"):
-            out.write("Tamil")
-            out.write("\n")
             driver.find_element(By.CSS_SELECTOR, ".language_list_item_wrapper-ta:nth-child(95) > .language_list_item").click()
             time.sleep(1)
         elif(target=="mar"):
-            out.write("Marathi")
-            out.write("\n")
             driver.find_element(By.CSS_SELECTOR, ".language_list_item_wrapper-mr:nth-child(67)").click()
             time.sleep(1)
         elif(target=="kan"):
-            out.write("Kannada")
-            out.write("\n")
             driver.find_element(By.CSS_SELECTOR, ".language_list_item_wrapper-kn:nth-child(49)").click()
             time.sleep(1)
         else:
@@ -114,12 +103,12 @@ def autoTrans(srcData,outputDS,source,target,translEngine,fileName):
             pyperclip.copy(data1)
             time.sleep(1)
             inpBox.send_keys(Keys.CONTROL, 'v')
-            time.sleep(1)
+            time.sleep(5)
             pyperclip.copy("")
             WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".tlid-copy-translation-button"))).click()
             time.sleep(1)
             alltext=pyperclip.paste()
-            time.sleep(1)
+            time.sleep(10)
             output.append(alltext)
             pyperclip.copy("")
             time.sleep(1)
@@ -131,38 +120,24 @@ def autoTrans(srcData,outputDS,source,target,translEngine,fileName):
         time.sleep(1)
         inpBox= driver.find_element_by_id("tta_input_ta")
         if(target=="eng"):
-            out.write("English")
-            out.write("\n")
             select = Select(WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "tta_tgtsl"))))
             select.select_by_visible_text("English")
         elif(target=="hin"):
-            out.write("Hindi")
-            out.write("\n")
             select = Select(WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "tta_tgtsl"))))
             select.select_by_visible_text("Hindi")
         elif(target=="ban"):
-            out.write("Bangla")
-            out.write("\n")
             select = Select(WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "tta_tgtsl"))))
             select.select_by_visible_text("Bangla")
         elif(target=="tel"):
-            out.write("Telugu")
-            out.write("\n")
             select = Select(WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "tta_tgtsl"))))
             select.select_by_visible_text("Telugu")
         elif(target=="tam"):
-            out.write("Tamil")
-            out.write("\n")
             select = Select(WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "tta_tgtsl"))))
             select.select_by_visible_text("Tamil")
         elif(target=="mar"):
-            out.write("Marathi")
-            out.write("\n")
             select = Select(WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "tta_tgtsl"))))
             select.select_by_visible_text("Marathi")
         elif(target=="kan"):
-            out.write("Kannada")
-            out.write("\n")
             select = Select(WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "tta_tgtsl"))))
             select.select_by_visible_text("Kannada")
         else:
@@ -173,16 +148,17 @@ def autoTrans(srcData,outputDS,source,target,translEngine,fileName):
             pyperclip.copy(data1)
             time.sleep(1)
             inpBox.send_keys(Keys.CONTROL, 'v')
-            time.sleep(2)
             pyperclip.copy("")
-            time.sleep(1)
-            driver.find_element_by_xpath('//*[@id="tta_copyIcon"]').click()
+            time.sleep(10)
+            element = WebDriverWait(driver, 120).until(EC.presence_of_element_located((By.ID, "tta_copyIcon")))
+            element.click()
+            # driver.find_element_by_xpath('//*[@id="tta_copyIcon"]').click()
             time.sleep(1)
             alltext=pyperclip.paste()
-            time.sleep(1)
+            time.sleep(5)
             output.append(alltext)
             pyperclip.copy("")
-            time.sleep(1)
+            time.sleep(2)
             inpBox.clear()
         driver.quit()
     elif(translEngine=="wmt"):
